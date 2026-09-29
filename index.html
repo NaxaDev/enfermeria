@@ -1,1 +1,917 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fundamentos Básicos de Enfermería</title>
+  <style>
+    /* =========================================================
+       Fundamentos Básicos de Enfermería — Estilos Premium
+       Paleta: Vinotinto / Coral / Mentolado / Turquesa
+       ========================================================= */
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap');
 
+    :root {
+      --maroon: #9A2A2A;
+      --maroon-deep: #7A1F1F;
+      --coral: #F75755;
+      --coral-dark: #E23F3D;
+      --mint: #E6F7F6;
+      --panel: #FFFFFF;
+      --teal: #1FC9C8;
+      --teal-dark: #0F7A79;
+      --teal-soft: #D7F4F3;
+
+      --ink: #20282B;
+      --ink-soft: #55636B;
+      --line: rgba(211, 236, 235, 0.6);
+
+      --nav-text: #FBEAE9;
+      --nav-text-soft: rgba(251, 234, 233, 0.72);
+
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-body: 'Public Sans', -apple-system, Segoe UI, sans-serif;
+
+      --nav-width: 260px;
+      --max-content: 68ch;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      color: var(--ink);
+      background-color: #f8fbfb;
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* ---------- Fondo Animado Médico 3D ---------- */
+    .bg-lab {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: -2;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 0%, #ffffff 0%, #e6f7f6 60%, #d7f4f3 100%);
+    }
+
+    .ecg-line {
+      position: absolute;
+      top: 50%; left: 0;
+      width: 100%; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(31, 201, 200, 0.3), transparent);
+      box-shadow: 0 0 10px rgba(31, 201, 200, 0.2);
+      animation: ecgPulse 4s linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes ecgPulse {
+      0% { transform: translateX(-100%); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateX(100%); opacity: 0; }
+    }
+
+    .cell {
+      position: absolute;
+      bottom: -200px;
+      animation-name: floatUp;
+      animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+      animation-iteration-count: infinite;
+      will-change: transform, opacity;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+        opacity: 0;
+      }
+      10% { opacity: 0.8; }
+      90% { opacity: 0.8; }
+      100% {
+        transform: translateY(-110vh) translateX(60px) rotate(360deg) scale(1.1);
+        opacity: 0;
+      }
+    }
+
+    /* ---------- Tipografía ---------- */
+    h1, h2, h3 {
+      font-family: var(--font-display);
+      font-weight: 600;
+      line-height: 1.2;
+      margin: 0 0 0.5em;
+      color: var(--maroon-deep);
+    }
+
+    h1 { font-size: clamp(2.2rem, 4vw, 3rem); letter-spacing: -0.02em; }
+    h2 { font-size: clamp(1.5rem, 2.5vw, 2rem); margin-top: 3rem; }
+    h3 { font-size: 1.2rem; font-weight: 600; color: var(--ink); }
+
+    p { margin: 0 0 1em; color: var(--ink-soft); }
+
+    a {
+      color: var(--coral-dark);
+      text-decoration-color: transparent;
+      text-underline-offset: 4px;
+      transition: all 0.2s ease;
+    }
+    a:hover, a:focus-visible { text-decoration: underline; text-decoration-color: currentColor; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--teal-dark); outline-offset: 2px; }
+
+    img { max-width: 100%; display: block; }
+
+    /* ---------- Layout y Glassmorphism ---------- */
+    .layout {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      min-height: 100vh;
+      padding: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 
+        0 20px 40px -20px rgba(154, 42, 42, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    /* ---------- Sidenav ---------- */
+    .sidenav {
+      width: var(--nav-width);
+      flex-shrink: 0;
+      border-radius: 24px;
+      padding: 2rem 1.2rem;
+      position: sticky;
+      top: 1.5rem;
+      height: calc(100vh - 3rem);
+      overflow-y: auto;
+      background: rgba(154, 42, 42, 0.88);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 20px 50px -24px rgba(122, 31, 31, 0.6);
+    }
+
+    .sidenav__brand {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1.05rem;
+      line-height: 1.3;
+      margin-bottom: 0.5rem;
+      color: var(--nav-text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .sidenav__brand:hover { text-decoration: none; }
+    .sidenav__brand-mark {
+      width: 2.5rem; height: 2.5rem; flex-shrink: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--coral), var(--maroon));
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      box-shadow: 0 8px 20px -8px rgba(247, 87, 85, 0.6);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .sidenav__brand:hover .sidenav__brand-mark {
+      transform: scale(1.1) rotate(-10deg);
+    }
+    .sidenav__brand-mark .icon { width: 1.3rem; height: 1.3rem; }
+
+    .sidenav__subtitle {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--nav-text-soft);
+      margin: 0 0 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .sidenav__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+
+    .sidenav__list a {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.75rem 1rem;
+      border-radius: 14px;
+      color: var(--nav-text-soft);
+      font-weight: 500;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sidenav__list a .icon { width: 1.2rem; height: 1.2rem; opacity: 0.8; transition: transform 0.3s ease; }
+    .sidenav__list a:hover .icon { transform: scale(1.15); opacity: 1; }
+
+    .sidenav__list a:hover {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      transform: translateX(4px);
+    }
+
+    .sidenav__list a[aria-current="page"] {
+      color: #fff;
+      background: linear-gradient(135deg, var(--coral), var(--coral-dark));
+      font-weight: 600;
+      box-shadow: 0 10px 24px -10px rgba(247, 87, 85, 0.7);
+    }
+    .sidenav__list a[aria-current="page"] .icon { opacity: 1; }
+    
+    .sidenav__toggle { display: none; }
+
+    /* ---------- Main Content ---------- */
+    .main { flex: 1; min-width: 0; padding: clamp(2rem, 4vw, 3.5rem) clamp(1rem, 4vw, 3rem); }
+    .main__inner { 
+      max-width: 920px; 
+      margin: 0 auto; 
+      border-radius: 28px; 
+      padding: clamp(2rem, 4vw, 3.5rem); 
+    }
+
+    .page { display: none; }
+    .page.active { 
+      display: block; 
+      animation: pageReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes pageReveal {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---------- Componentes ---------- */
+    .eyebrow { 
+      color: var(--coral-dark); 
+      font-weight: 700; 
+      font-size: 0.85rem; 
+      margin-bottom: 0.5rem; 
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .lede { max-width: var(--max-content); font-size: 1.15rem; line-height: 1.7; }
+
+    .card {
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.9);
+      border-radius: 18px;
+      padding: 1.8rem;
+      transition: all 0.3s ease;
+    }
+
+    /* ---------- Iconos ---------- */
+    .icon {
+      width: 1em; height: 1em;
+      display: inline-block;
+      vertical-align: -0.15em;
+      flex-shrink: 0;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .icon-badge {
+      width: 3rem; height: 3rem;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--teal-soft), rgba(31, 201, 200, 0.1));
+      color: var(--teal-dark);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 8px 16px -8px rgba(31, 201, 200, 0.3);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .icon-badge .icon { width: 1.4rem; height: 1.4rem; }
+    .icon-badge--coral { background: linear-gradient(135deg, rgba(247, 87, 85, 0.2), rgba(247, 87, 85, 0.05)); color: var(--coral-dark); box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 8px 16px -8px rgba(247, 87, 85, 0.3); }
+    .icon-badge--maroon { background: linear-gradient(135deg, rgba(154, 42, 42, 0.2), rgba(154, 42, 42, 0.05)); color: var(--maroon-deep); }
+
+    .module {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 1.5rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--line);
+    }
+    .module:first-of-type { border-top: none; padding-top: 0; }
+    .module:hover .icon-badge {
+      transform: scale(1.1) rotate(-5deg);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 12px 24px -8px rgba(0,0,0,0.15);
+    }
+
+    .module__corte {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--teal-dark);
+      background: rgba(31, 201, 200, 0.1);
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      margin-bottom: 0.6rem;
+    }
+
+    .module p { max-width: var(--max-content); }
+
+    .resource-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.2rem; margin-top: 2rem; }
+    .resource-card { 
+      display: flex; flex-direction: column; gap: 0.5rem;
+    }
+    .resource-card:hover { 
+      transform: translateY(-4px); 
+      box-shadow: 0 20px 40px -20px rgba(32, 40, 43, 0.2); 
+      border-color: rgba(255,255,255,1);
+    }
+    .resource-card .icon-badge { margin-bottom: 0.5rem; }
+    .resource-card:hover .icon-badge { transform: translateY(-2px) scale(1.05); }
+    .resource-card h3 { margin-bottom: 0.2rem; }
+    .resource-card p { font-size: 0.95rem; margin-bottom: 1rem; }
+    .resource-card .tag { font-size: 0.75rem; color: var(--coral-dark); font-weight: 700; text-transform: uppercase; }
+    .resource-card a { display: inline-flex; align-items: center; gap: 0.4rem; font-weight: 600; margin-top: auto; }
+
+    .profile-header { display: flex; gap: 2rem; align-items: center; flex-wrap: wrap; margin-bottom: 2rem; }
+
+    .profile-photo-wrapper {
+      position: relative;
+      width: 140px; height: 140px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      padding: 4px;
+      background: conic-gradient(from 0deg, var(--coral), var(--teal), var(--coral));
+      box-shadow: 0 10px 30px -10px rgba(122,31,31,0.4);
+    }
+
+    .profile-photo {
+      width: 100%; height: 100%; border-radius: 50%;
+      object-fit: cover;
+      background: var(--maroon);
+      border: 4px solid #fff;
+      transition: transform 0.4s ease;
+    }
+    .profile-photo-wrapper:hover .profile-photo { transform: scale(1.05); }
+
+    .social-list { list-style: none; padding: 0; margin: 1.5rem 0 0; display: flex; flex-direction: column; gap: 0.8rem; }
+    .social-list a { display: inline-flex; align-items: center; gap: 0.8rem; font-weight: 600; }
+    .social-list .icon-badge { width: 2.5rem; height: 2.5rem; border-radius: 12px; }
+    .social-list .icon-badge .icon { width: 1.2rem; height: 1.2rem; }
+    .social-list a:hover .icon-badge { transform: scale(1.1); background: var(--coral); color: #fff; box-shadow: 0 8px 20px -8px rgba(247, 87, 85, 0.5); }
+
+    .icon-inline { width: 0.85em; height: 0.85em; margin-left: 0.25rem; opacity: 0.75; }
+
+    .badge-placeholder {
+      display: inline-block; font-size: 0.75rem; color: var(--ink-soft);
+      border: 1px dashed var(--line); padding: 0.3rem 0.6rem; border-radius: 6px;
+      background: rgba(255,255,255,0.5);
+    }
+
+    .divider { border: none; border-top: 1px solid var(--line); margin: 3rem 0; }
+
+    footer.site-footer {
+      margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--line);
+      font-size: 0.85rem; color: var(--ink-soft);
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 820px) {
+      .layout { display: block; padding: 1rem; }
+      .main { padding-left: 0.5rem; padding-right: 0.5rem; }
+      .sidenav {
+        position: sticky; top: 1rem; z-index: 10; width: 100%; height: auto;
+        border-radius: 20px; padding: 1rem 1.2rem;
+      }
+      .sidenav__subtitle { display: none; }
+      .sidenav__toggle {
+        display: flex; align-items: center; justify-content: space-between; width: 100%;
+        background: none; border: none; font-family: var(--font-body); font-weight: 600;
+        font-size: 1rem; color: var(--nav-text); cursor: pointer; padding: 0.5rem 0;
+      }
+      .sidenav__toggle .hamburger {
+        width: 20px; height: 14px; position: relative; display: inline-block;
+      }
+      .sidenav__toggle .hamburger span {
+        position: absolute; left: 0; width: 100%; height: 2px; background: currentColor;
+        border-radius: 2px; transition: transform .3s ease, opacity .3s ease;
+      }
+      .sidenav__toggle .hamburger span:nth-child(1) { top: 0; }
+      .sidenav__toggle .hamburger span:nth-child(2) { top: 6px; }
+      .sidenav__toggle .hamburger span:nth-child(3) { top: 12px; }
+      .sidenav.is-open .sidenav__toggle .hamburger span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+      .sidenav.is-open .sidenav__toggle .hamburger span:nth-child(2) { opacity: 0; }
+      .sidenav.is-open .sidenav__toggle .hamburger span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+      .sidenav__list { display: none; padding-top: 1rem; margin-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.15); }
+      .sidenav.is-open .sidenav__list { display: flex; }
+      .module { grid-template-columns: 44px 1fr; gap: 1rem; padding: 1.5rem 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fondo Animado Médico 3D -->
+  <div class="bg-lab" id="bgLab">
+    <div class="ecg-line"></div>
+  </div>
+
+  <!-- Definición de Iconos y Glóbulos SVG -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <defs>
+      <!-- Glóbulo Rojo (Realista 3D) -->
+      <symbol id="rbc" viewBox="0 0 100 100">
+        <defs>
+          <radialGradient id="rbc-grad" cx="35%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#FF8B89"/>
+            <stop offset="40%" stop-color="#F75755"/>
+            <stop offset="80%" stop-color="#E23F3D"/>
+            <stop offset="100%" stop-color="#9A2A2A"/>
+          </radialGradient>
+        </defs>
+        <circle cx="50" cy="50" r="42" fill="url(#rbc-grad)"/>
+        <!-- Centro deprimido -->
+        <circle cx="50" cy="50" r="15" fill="#9A2A2A" opacity="0.25"/>
+        <!-- Brillo -->
+        <ellipse cx="35" cy="32" rx="12" ry="8" fill="#FFFFFF" opacity="0.3" transform="rotate(-30 35 32)"/>
+      </symbol>
+
+      <!-- Glóbulo Blanco (Leucocito) -->
+      <symbol id="wbc" viewBox="0 0 100 100">
+        <defs>
+          <radialGradient id="wbc-grad" cx="35%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#FFFFFF"/>
+            <stop offset="70%" stop-color="#E6F7F6"/>
+            <stop offset="100%" stop-color="#1FC9C8"/>
+          </radialGradient>
+        </defs>
+        <circle cx="50" cy="50" r="42" fill="url(#wbc-grad)" stroke="#D7F4F3" stroke-width="2"/>
+        <circle cx="45" cy="50" r="12" fill="#1FC9C8" opacity="0.4"/>
+        <circle cx="55" cy="45" r="8" fill="#1FC9C8" opacity="0.4"/>
+      </symbol>
+
+      <!-- Plaquetas (Pequeñas y Lila) -->
+      <symbol id="plt" viewBox="0 0 100 100">
+        <defs>
+          <radialGradient id="plt-grad" cx="35%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#FFFFFF"/>
+            <stop offset="80%" stop-color="#D7BDE2"/>
+            <stop offset="100%" stop-color="#A569BD"/>
+          </radialGradient>
+        </defs>
+        <circle cx="50" cy="50" r="25" fill="url(#plt-grad)"/>
+      </symbol>
+
+      <!-- Iconos de Interfaz -->
+      <symbol id="icon-home" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="M3 11.5 12 4l9 7.5M5.5 10v9a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1v-9"/>
+      </symbol>
+      <symbol id="icon-book" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5v-13Z"/>
+        <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5v-13Z"/>
+      </symbol>
+      <symbol id="icon-sparkles" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="m11 4 1.4 3.6L16 9l-3.6 1.4L11 14l-1.4-3.6L6 9l3.6-1.4L11 4Z"/>
+        <path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="m18 13 .8 2.1L21 16l-2.2.9L18 19l-.8-2.1L15 16l2.2-.9L18 13Z"/>
+      </symbol>
+      <symbol id="icon-user" viewBox="0 0 24 24">
+        <circle cx="12" cy="8.5" r="3.5" fill="none" stroke="currentColor" stroke-width="1.75"/>
+        <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" d="M4.8 19.5c1.2-3.3 4-5 7.2-5s6 1.7 7.2 5"/>
+      </symbol>
+      <symbol id="icon-external" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="M9 6H6.5A1.5 1.5 0 0 0 5 7.5v10A1.5 1.5 0 0 0 6.5 19h10a1.5 1.5 0 0 0 1.5-1.5V15M13 5h6v6M18.5 5.5l-8 8"/>
+      </symbol>
+      <symbol id="icon-youtube" viewBox="0 0 24 24">
+        <rect x="3" y="6" width="18" height="12" rx="4" fill="none" stroke="currentColor" stroke-width="1.75"/>
+        <path d="M10.5 9.5v5l4.5-2.5-4.5-2.5Z" fill="currentColor" stroke="none"/>
+      </symbol>
+      <symbol id="icon-instagram" viewBox="0 0 24 24">
+        <rect x="4" y="4" width="16" height="16" rx="5" fill="none" stroke="currentColor" stroke-width="1.75"/>
+        <circle cx="12" cy="12" r="3.6" fill="none" stroke="currentColor" stroke-width="1.75"/>
+        <circle cx="16.6" cy="7.4" r="1" fill="currentColor" stroke="none"/>
+      </symbol>
+      <symbol id="icon-mail" viewBox="0 0 24 24">
+        <rect x="3.5" y="5.5" width="17" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.75"/>
+        <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="m4.5 7 7.5 6 7.5-6"/>
+      </symbol>
+      <symbol id="icon-clipboard" viewBox="0 0 24 24">
+        <rect x="5.5" y="4.5" width="13" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.75"/>
+        <rect x="9" y="3" width="6" height="3" rx="1" fill="none" stroke="currentColor" stroke-width="1.75"/>
+        <path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M8.5 12h7M8.5 15.5h7M8.5 8.5h4"/>
+      </symbol>
+      <symbol id="icon-shield" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" d="M12 3.5 5 6v5.5c0 4.5 3 7.7 7 9 4-1.3 7-4.5 7-9V6l-7-2.5Z"/>
+        <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="m9 12 2 2 4-4.2"/>
+      </symbol>
+      <symbol id="icon-heart-pulse" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="M12 20s-6.7-4.1-9.2-8.4C1.2 8.7 2.8 5.2 6 4.6c1.9-.3 3.5.5 4.5 2 .3.4.9.4 1.2 0 1-1.5 2.6-2.3 4.5-2 3.2.6 4.8 4.1 3.2 7-.5.9-1.1 1.8-1.9 2.6"/>
+        <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="M2.5 12.5h4l1.5-3 2 5 1.5-2.5h9.5"/>
+      </symbol>
+      <symbol id="icon-activity" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="M3 12h4l2-6 4 12 2-9 1.5 3H21"/>
+      </symbol>
+      <symbol id="icon-syringe" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="m19.5 4.5-2 2M17.5 6.5l-9 9M15.8 8.2 12 4.4M12.6 11l-2-2M14.6 7l3 3M4.5 19.5 8.5 15.5"/>
+      </symbol>
+      <symbol id="icon-stethoscope" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="M6 4v5.5a4 4 0 0 0 8 0V4M10 4H4M14 4h4"/>
+        <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="M14 9.5v3.5a5.5 5.5 0 0 0 11 0v-1.3"/>
+        <circle cx="19.7" cy="9.7" r="1.6" fill="none" stroke="currentColor" stroke-width="1.75"/>
+      </symbol>
+      <symbol id="icon-file-text" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="M7 3.5h7l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-16a1 1 0 0 1 1-1Z"/>
+        <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="M14 3.5v4h4M8.5 13h7M8.5 16.5h7"/>
+      </symbol>
+      <symbol id="icon-video" viewBox="0 0 24 24">
+        <rect x="3" y="6" width="13" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.75"/>
+        <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="m16.5 10 4.5-2.5v9L16.5 14"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="layout">
+
+    <!-- Navegación Lateral -->
+    <nav class="sidenav" id="sidenav">
+      <button class="sidenav__toggle" aria-expanded="false" aria-controls="sidenav-list">
+        Menú del curso <span class="hamburger" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+      <a class="sidenav__brand" href="#" data-target="inicio"><span class="sidenav__brand-mark"><svg class="icon"><use href="#icon-stethoscope"></use></svg></span><span>Fundamentos Básicos<br>de Enfermería</span></a>
+      <p class="sidenav__subtitle">Primer semestre</p>
+      <ul class="sidenav__list" id="sidenav-list">
+        <li><a href="#" class="nav-link" data-target="inicio" aria-current="page"><svg class="icon"><use href="#icon-home"></use></svg><span>Inicio</span></a></li>
+        <li><a href="#" class="nav-link" data-target="contenido"><svg class="icon"><use href="#icon-book"></use></svg><span>Contenido del semestre</span></a></li>
+        <li><a href="#" class="nav-link" data-target="recursos"><svg class="icon"><use href="#icon-sparkles"></use></svg><span>Recursos y herramientas</span></a></li>
+        <li><a href="#" class="nav-link" data-target="profesora"><svg class="icon"><use href="#icon-user"></use></svg><span>Perfil de la profesora</span></a></li>
+      </ul>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="main">
+      <div class="main__inner glass-panel">
+        
+        <!-- PÁGINA: INICIO -->
+        <section class="page active" id="page-inicio">
+          <p class="eyebrow">Curso · Primer semestre</p>
+          <h1>Fundamentos Básicos de Enfermería</h1>
+          <p class="lede">
+            Bienvenido(a) al espacio de trabajo del curso. Aquí encontrarás los módulos,
+            guías y textos del semestre, los recursos y videos de apoyo, y la información
+            de contacto de la profesora. El curso está organizado en dos cortes que cubren
+            desde los fundamentos éticos de la profesión hasta la toma práctica de signos vitales.
+          </p>
+          <hr class="divider">
+          <h2>¿Qué vas a encontrar en este curso?</h2>
+          <div class="module">
+            <div class="icon-badge module__icon-index" aria-hidden="true"><svg class="icon"><use href="#icon-clipboard"></use></svg></div>
+            <div>
+              <h3>El Proceso de Atención de Enfermería (PAE)</h3>
+              <p>Sus cinco etapas — valoración, diagnóstico, planificación, ejecución y evaluación —
+              como método central del trabajo de enfermería.</p>
+            </div>
+          </div>
+          <div class="module">
+            <div class="icon-badge module__icon-index" aria-hidden="true"><svg class="icon"><use href="#icon-shield"></use></svg></div>
+            <div>
+              <h3>Ética y proceso salud-enfermedad</h3>
+              <p>Los principios que guían la práctica profesional y una mirada al concepto de
+              salud como proceso, no solo como ausencia de enfermedad.</p>
+            </div>
+          </div>
+          <div class="module">
+            <div class="icon-badge module__icon-index" aria-hidden="true"><svg class="icon"><use href="#icon-heart-pulse"></use></svg></div>
+            <div>
+              <h3>Signos vitales</h3>
+              <p>Teoría y técnica para la toma de frecuencia cardíaca, tensión arterial,
+              respiración y temperatura, con una evaluación práctica final.</p>
+            </div>
+          </div>
+          <hr class="divider">
+          <p>
+            Empieza por la sección <a href="#" class="nav-link" data-target="contenido"><svg class="icon"><use href="#icon-book"></use></svg><span>Contenido del semestre</span></a> para
+            revisar cada tema en detalle, o visita el <a href="#" class="nav-link" data-target="profesora">perfil de la profesora</a>
+            para conocer sus medios de contacto.
+          </p>
+          <footer class="site-footer">Fundamentos Básicos de Enfermería · Primer semestre</footer>
+        </section>
+
+        <!-- PÁGINA: CONTENIDO -->
+        <section class="page" id="page-contenido">
+          <p class="eyebrow">Módulos del curso</p>
+          <h1>Contenido del Primer Semestre</h1>
+          <p class="lede">
+            Los temas están agrupados por corte de evaluación. Cada módulo resume de qué trata
+            el tema; las guías y textos completos se irán agregando conforme la profesora los comparta.
+          </p>
+          <hr class="divider">
+          <h2>Corte 1</h2>
+          <div class="module">
+            <div class="icon-badge module__icon-index" aria-hidden="true"><svg class="icon"><use href="#icon-shield"></use></svg></div>
+            <div>
+              <span class="module__corte">Corte 1 · Módulo 1</span>
+              <h3>Inducción, Proceso Salud-Enfermedad y Ética</h3>
+              <p>
+                Presentación del curso. Aborda el concepto de salud y enfermedad como un proceso
+                dinámico —no solo la ausencia de enfermedad— y los principios éticos fundamentales
+                de la profesión: autonomía, beneficencia, no maleficencia, justicia y confidencialidad
+                del paciente. Incluye una introducción al código deontológico de enfermería.
+              </p>
+              <span class="badge-placeholder">Guías y textos: pendiente por agregar</span>
+            </div>
+          </div>
+          <div class="module">
+            <div class="icon-badge module__icon-index" aria-hidden="true"><svg class="icon"><use href="#icon-clipboard"></use></svg></div>
+            <div>
+              <span class="module__corte">Corte 1 · Módulo 2</span>
+              <h3>PAE — Valoración y Diagnóstico</h3>
+              <p>
+                Primeras dos etapas del Proceso de Atención de Enfermería. La <strong>valoración</strong>
+                cubre la recolección de datos del paciente (entrevista, examen físico, fuentes de
+                información) organizados por patrones funcionales. El <strong>diagnóstico</strong> enseña
+                a analizar esos datos para formular diagnósticos de enfermería usando la taxonomía NANDA
+                (problema + factor relacionado + características definitorias).
+              </p>
+              <span class="badge-placeholder">Guías y textos: pendiente por agregar</span>
+            </div>
+          </div>
+          <h2>Corte 2</h2>
+          <div class="module">
+            <div class="icon-badge module__icon-index" aria-hidden="true"><svg class="icon"><use href="#icon-activity"></use></svg></div>
+            <div>
+              <span class="module__corte">Corte 2 · Módulo 3</span>
+              <h3>PAE — Planificación, Ejecución, Evaluación y Signos Vitales</h3>
+              <p>
+                Últimas tres etapas del PAE: <strong>planificación</strong> (prioridades y objetivos
+                según criterios NOC), <strong>ejecución</strong> (intervenciones de enfermería, NIC) y
+                <strong>evaluación</strong> (verificación de objetivos y ajuste del plan de cuidados).
+                Se introduce además el tema de signos vitales como parte de la valoración continua.
+              </p>
+              <span class="badge-placeholder">Guías y textos: pendiente por agregar</span>
+            </div>
+          </div>
+          <div class="module">
+            <div class="icon-badge module__icon-index" aria-hidden="true"><svg class="icon"><use href="#icon-heart-pulse"></use></svg></div>
+            <div>
+              <span class="module__corte">Corte 2 · Módulo 4</span>
+              <h3>Generalidades de Signos Vitales</h3>
+              <p>
+                Concepto e importancia de los signos vitales como indicadores del estado fisiológico
+                del paciente. Presenta los cuatro signos vitales principales, sus valores normales
+                según grupo etario, los factores que pueden alterarlos y el equipo básico necesario
+                para su medición.
+              </p>
+              <span class="badge-placeholder">Guías y textos: pendiente por agregar</span>
+            </div>
+          </div>
+          <div class="module">
+            <div class="icon-badge module__icon-index" aria-hidden="true"><svg class="icon"><use href="#icon-stethoscope"></use></svg></div>
+            <div>
+              <span class="module__corte">Corte 2 · Módulo 5</span>
+              <h3>Frecuencia cardíaca, tensión arterial, respiración y temperatura</h3>
+              <p>
+                Profundización técnica en la toma de cada signo vital: sitios de palpación del pulso
+                y sus características; uso del esfigmomanómetro y fonendoscopio para la tensión
+                arterial; frecuencia, ritmo y profundidad respiratoria; y sitios y tipos de
+                termómetros para la temperatura corporal.
+              </p>
+              <span class="badge-placeholder">Guías y textos: pendiente por agregar</span>
+            </div>
+          </div>
+          <div class="module">
+            <div class="icon-badge module__icon-index" aria-hidden="true"><svg class="icon"><use href="#icon-activity"></use></svg></div>
+            <div>
+              <span class="module__corte">Corte 2 · Módulo 6</span>
+              <h3>Evaluación Práctica</h3>
+              <p>
+                Demostración práctica de las técnicas aprendidas: toma correcta de los cuatro signos
+                vitales, registro adecuado de los valores e interpretación básica de resultados
+                normales frente a anormales.
+              </p>
+              <span class="badge-placeholder">Guías y textos: pendiente por agregar</span>
+            </div>
+          </div>
+          <div class="module">
+            <div class="icon-badge module__icon-index" aria-hidden="true"><svg class="icon"><use href="#icon-syringe"></use></svg></div>
+            <div>
+              <span class="module__corte">Corte 2 · Módulo 7</span>
+              <h3>Vías de Administración de Medicamentos por Inyección</h3>
+              <p>
+                Clase final del semestre: estudio de las cuatro vías parenterales de administración
+                de medicamentos — <strong>intradérmica (ID)</strong>, <strong>subcutánea (SC)</strong>,
+                <strong>intramuscular (IM)</strong> e <strong>intravenosa (IV)</strong>. Para cada una
+                se revisan los sitios anatómicos de aplicación, el ángulo de inserción de la aguja,
+                el calibre y longitud recomendados, y las precauciones de bioseguridad (técnica
+                aséptica y manejo de material punzocortante). Cierra con la comparación de ventajas,
+                riesgos y usos clínicos de cada vía frente a las demás.
+              </p>
+              <span class="badge-placeholder">Guías y textos: pendiente por agregar</span>
+            </div>
+          </div>
+          <footer class="site-footer">Fundamentos Básicos de Enfermería · Primer semestre</footer>
+        </section>
+
+        <!-- PÁGINA: RECURSOS -->
+        <section class="page" id="page-recursos">
+          <p class="eyebrow">Apoyo al estudio</p>
+          <h1>Recursos y Herramientas</h1>
+          <p class="lede">
+            Videos y enlaces de apoyo para reforzar los temas del curso. Esta sección se irá
+            completando con el material que comparta la profesora.
+          </p>
+          <hr class="divider">
+          <h2>Video destacado</h2>
+          <p>
+            Cuando la profesora indique un video puntual del canal, se incrustará aquí mismo.
+            Por ahora puedes visitar el canal completo desde el enlace de abajo.
+          </p>
+          <div class="card" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.75rem; min-height:200px; text-align:center; border-style: dashed;">
+            <div class="icon-badge icon-badge--coral" aria-hidden="true"><svg class="icon"><use href="#icon-video"></use></svg></div>
+            <div>
+              <p style="margin-bottom:0.5rem; font-weight:600;">Espacio reservado para el video incrustado</p>
+              <span class="badge-placeholder">Se agregará el ID del video cuando la profesora lo comparta</span>
+            </div>
+          </div>
+          <hr class="divider">
+          <h2>Enlaces útiles</h2>
+          <div class="resource-grid">
+            <div class="card resource-card">
+              <div class="icon-badge icon-badge--coral" aria-hidden="true"><svg class="icon"><use href="#icon-youtube"></use></svg></div>
+              <span class="tag">Canal · YouTube</span>
+              <h3>Videos de la profesora</h3>
+              <p>Explicaciones y material audiovisual del curso.</p>
+              <a href="https://www.youtube.com/@maritzamartinez.bienesmar" target="_blank" rel="noopener">Ver canal <svg class="icon"><use href="#icon-external"></use></svg></a>
+            </div>
+            <div class="card resource-card">
+              <div class="icon-badge" aria-hidden="true"><svg class="icon"><use href="#icon-file-text"></use></svg></div>
+              <span class="tag">Pendiente</span>
+              <h3>Guías de estudio</h3>
+              <p>Espacio reservado para las guías en PDF de cada módulo.</p>
+              <span class="badge-placeholder">Por agregar</span>
+            </div>
+            <div class="card resource-card">
+              <div class="icon-badge icon-badge--maroon" aria-hidden="true"><svg class="icon"><use href="#icon-book"></use></svg></div>
+              <span class="tag">Pendiente</span>
+              <h3>Glosario de términos</h3>
+              <p>Vocabulario clave del curso (PAE, NANDA, NOC, NIC, etc.).</p>
+              <span class="badge-placeholder">Por agregar</span>
+            </div>
+          </div>
+          <footer class="site-footer">Fundamentos Básicos de Enfermería · Primer semestre</footer>
+        </section>
+
+        <!-- PÁGINA: PROFESORA -->
+        <section class="page" id="page-profesora">
+          <p class="eyebrow">Docente del curso</p>
+          <h1>Maritza Martínez</h1>
+          <div class="profile-header">
+            <div class="profile-photo-wrapper">
+              <img class="profile-photo" src="https://z-cdn-media.chatglm.cn/files/580ba738-6c67-485c-baa8-f7027cf6da33.jpg?auth_key=1890720674-de55e60848244f67909347e5c1ff75a8-0-6eaff59cc4adab782ab73e165836b43a" alt="Foto de la profesora Maritza Martínez">
+            </div>
+            <div>
+              <p class="module__corte" style="margin-bottom: 0.75rem;">Enfermera · Docente · Doctora en Ciencias de la Educación</p>
+              <p class="lede" style="max-width: 52ch; margin-bottom: 0;">
+                Ciencia, bienestar y salud integrados en tu día a día. Soy Maritza Martínez,
+                Enfermera, Docente y Doctora en Ciencias de la Educación, y apasionada por la
+                neurociencia aplicada. Aquí encontrarás herramientas prácticas, estrategias de
+                autocuidado, hábitos saludables y recursos de educación en salud para potenciar
+                tu calidad de vida y bienestar integral.
+              </p>
+            </div>
+          </div>
+          <hr class="divider">
+          <h2>Contacto y redes sociales</h2>
+          <ul class="social-list">
+            <li>
+              <a href="https://www.youtube.com/@maritzamartinez.bienesmar" target="_blank" rel="noopener">
+                <span class="icon-badge"><svg class="icon"><use href="#icon-youtube"></use></svg></span>
+                <span>YouTube — @maritzamartinez.bienesmar</span>
+                <svg class="icon icon-inline"><use href="#icon-external"></use></svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.instagram.com/marimartinez4.mm" target="_blank" rel="noopener">
+                <span class="icon-badge"><svg class="icon"><use href="#icon-instagram"></use></svg></span>
+                <span>Instagram — @marimartinez4.mm</span>
+                <svg class="icon icon-inline"><use href="#icon-external"></use></svg>
+              </a>
+            </li>
+            <li style="display:flex; align-items:center; gap:0.8rem;">
+              <span class="icon-badge"><svg class="icon"><use href="#icon-mail"></use></svg></span>
+              <span class="badge-placeholder">Correo / otro medio de contacto: pendiente por agregar</span>
+            </li>
+          </ul>
+          <footer class="site-footer">Fundamentos Básicos de Enfermería · Primer semestre</footer>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Script para Navegación y Fondo Dinámico -->
+  <script>
+    // 1. Lógica para generar el fondo de Glóbulos (Efecto 3D / Profundidad)
+    document.addEventListener('DOMContentLoaded', () => {
+      const bgContainer = document.getElementById('bgLab');
+      // Reducir cantidad en móviles para mejorar rendimiento
+      const totalCells = window.innerWidth < 768 ? 15 : 35; 
+      const cellTypes = ['#rbc', '#rbc', '#rbc', '#rbc', '#wbc', '#plt']; // Más probabilidad de glóbulos rojos
+
+      for (let i = 0; i < totalCells; i++) {
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', '0 0 100 100');
+        
+        const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+        const type = cellTypes[Math.floor(Math.random() * cellTypes.length)];
+        use.setAttribute('href', type);
+        svg.appendChild(use);
+
+        // Tamaño aleatorio (entre 40px y 120px)
+        const size = Math.random() * 80 + 40;
+        svg.setAttribute('width', size);
+        svg.setAttribute('height', size);
+        
+        svg.classList.add('cell');
+
+        // Posición inicial aleatoria
+        svg.style.left = Math.random() * 100 + 'vw';
+        
+        // Profundidad 3D: los más pequeños son más lentos y transparentes (parecen estar lejos)
+        const depthOpacity = (size / 120) * 0.7 + 0.1; // 0.1 a 0.8
+        svg.style.opacity = depthOpacity;
+
+        // Desenfoque para simular microscopio
+        if (size < 70) {
+          svg.style.filter = 'blur(2px)';
+        } else if (size > 100) {
+          svg.style.filter = 'drop-shadow(0 10px 20px rgba(247, 87, 85, 0.2))';
+        }
+
+        // Duración y retraso aleatorio
+        const duration = Math.random() * 15 + 15; // 15s a 30s
+        svg.style.animationDuration = duration + 's';
+        
+        // Retraso negativo para que las células ya estén distribuidas en la pantalla desde el inicio
+        svg.style.animationDelay = -Math.random() * duration + 's';
+
+        bgContainer.appendChild(svg);
+      }
+
+      // 2. Lógica para la navegación SPA y menú móvil
+      const toggle = document.querySelector('.sidenav__toggle');
+      const nav = document.querySelector('.sidenav');
+      const navLinks = document.querySelectorAll('.nav-link');
+      const pages = document.querySelectorAll('.page');
+
+      if (toggle && nav) {
+        toggle.addEventListener('click', () => {
+          const isOpen = nav.classList.toggle('is-open');
+          toggle.setAttribute('aria-expanded', String(isOpen));
+        });
+      }
+
+      function showPage(pageId) {
+        pages.forEach(page => {
+          page.classList.remove('active');
+          if (page.id === 'page-' + pageId) {
+            page.classList.add('active');
+          }
+        });
+
+        navLinks.forEach(link => {
+          link.removeAttribute('aria-current');
+          if (link.dataset.target === pageId) {
+            link.setAttribute('aria-current', 'page');
+          }
+        });
+
+        // Cerrar menú móvil si está abierto
+        if (nav && nav.classList.contains('is-open')) {
+          nav.classList.remove('is-open');
+          if (toggle) toggle.setAttribute('aria-expanded', 'false');
+        }
+        
+        // Scroll hacia arriba al cambiar de página
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = link.dataset.target;
+          if (target) {
+            showPage(target);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
